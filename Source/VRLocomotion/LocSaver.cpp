@@ -23,6 +23,7 @@ ULocSaver::ULocSaver()
 	ApplyRotation = true;
 	Velocity = FVector(0.0, 0.0, 0.0);
 	VelocityInfluencedByPlayback = false;
+	RecalculateVelocity = false;
 }
 
 // Called when actor is destroyed, or the game ends
@@ -186,14 +187,7 @@ void ULocSaver::SetCurrentLocation()
 	}
 
 	// Update the velocity variable
-	if (VelocityInfluencedByPlayback)
-	{
-		Velocity = VelocityArray[CurrentTimeIndex] * PlaybackRateScale;
-	}
-	else
-	{
-		Velocity = VelocityArray[CurrentTimeIndex];
-	}
+	SetVelocity();
 
 	// Updates the location - PositionOffset is added to the location from the file
 	GetOwner()->SetActorLocation(Locations[CurrentTimeIndex] + PositionOffset, false);
@@ -215,4 +209,34 @@ void ULocSaver::SetCurrentLocation()
 FVector ULocSaver::GetVelocity() const
 {
 	return Velocity;
+}
+
+
+// Sets the velocity variable - FORCEINLINE to improve performance
+FORCEINLINE void ULocSaver::SetVelocity()
+{
+	bool NewVelocity = false;
+
+	if (!RecalculateVelocity)
+	{
+		// Read the velocity from the array based on the file
+		Velocity = VelocityArray[CurrentTimeIndex];
+		NewVelocity = true;
+	}
+	else
+	{
+		// Calculate a velocity based on the location movement
+		FVector TempVelocity = (Locations[CurrentTimeIndex + 1] - Locations[CurrentTimeIndex]) / (1 / (PlaybackRate * PlaybackRateScale));
+		if (TempVelocity.SizeSquared() != 0)
+		{
+			Velocity = TempVelocity;
+			NewVelocity = true;
+		}
+	}
+
+	// Scale the velocity if a new velocity has been calculated, and the boolean has been checked in the editor
+	if (NewVelocity && VelocityInfluencedByPlayback)
+	{
+		Velocity *= PlaybackRateScale;
+	}
 }
