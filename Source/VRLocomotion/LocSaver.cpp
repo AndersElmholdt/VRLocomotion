@@ -99,12 +99,34 @@ void ULocSaver::WriteToFile() const
 		}
 
 		// Save the string to file
-		const FString AbsoluteFilePath = Directory + FileName + ".loc";
+		FString AbsoluteFilePath = Directory + FileName + ".loc";
 		if (PlatformFile.CreateDirectoryTree(*Directory))
 		{
+			// Write ther file to specified name if we are allowed to overwrite, or the file does not already exist
 			if (AllowOverwriting || !PlatformFile.FileExists(*AbsoluteFilePath))
 			{
 				FFileHelper::SaveStringToFile(SaveData, *AbsoluteFilePath);
+			}
+
+			// Otherwise, increment the filename and try again
+			else
+			{
+				// Max iterations of loop
+				const int MaxFileIndex = 100;
+
+				// Check for non existing file names with increments up to specified max
+				int i = 0;
+				do
+				{
+					i++;
+					AbsoluteFilePath = Directory + FileName + FString::FromInt(i) + ".loc";
+				} while (PlatformFile.FileExists(*AbsoluteFilePath) && i < MaxFileIndex);
+
+				// Save the data
+				if (!PlatformFile.FileExists(*AbsoluteFilePath))
+				{
+					FFileHelper::SaveStringToFile(SaveData, *AbsoluteFilePath);
+				}
 			}
 		}
 	}
