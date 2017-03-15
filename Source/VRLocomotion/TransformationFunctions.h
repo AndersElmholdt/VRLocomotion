@@ -16,7 +16,7 @@ class VRLOCOMOTION_API UTransformationFunctions : public UBlueprintFunctionLibra
 		/**
 		* Adds a delta to the rotation of the component in world space around a specified pivot.
 		* @param Target			The component that should be rotated.
-		* @param Pivot			The component that should be used as pivot.
+		* @param Pivot			The location that should be used as pivot.
 		* @param DeltaRotation	Change in rotation in world space for the component.
 		* @param SweepHitResult	Hit result from any impact if sweep is true.
 		* @param Sweep			Whether we sweep to the destination (currently not supported for rotation).
@@ -26,7 +26,7 @@ class VRLOCOMOTION_API UTransformationFunctions : public UBlueprintFunctionLibra
 		*						If CCD is on and not teleporting, this will affect objects along the entire sweep volume.
 		*/
 		UFUNCTION(BlueprintCallable, Category = "Utilities|Transformation", meta = (DisplayName = "AddWorldRotationAroundPivot", AdvancedDisplay = "Sweep,SweepHitResult,Teleport"))
-		static void AddWorldRotationAroundPivot(USceneComponent* const Target, const USceneComponent* const Pivot, const FVector DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport);
+		static void AddWorldRotationAroundPivot(USceneComponent* const Target, const FVector Pivot, const FVector DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport);
 	
 	
 };

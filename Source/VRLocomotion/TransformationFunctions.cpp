@@ -4,10 +4,10 @@
 #include "TransformationFunctions.h"
 
 
-void UTransformationFunctions::AddWorldRotationAroundPivot(USceneComponent* const Target, const USceneComponent* const Pivot, FVector DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport)
+void UTransformationFunctions::AddWorldRotationAroundPivot(USceneComponent* const Target, const FVector Pivot, FVector DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport)
 {
 	// Calculate the relative location of the pivot from the target
-	const FVector PivotRLocation = (Pivot->GetComponentLocation() - Target->GetComponentLocation());
+	const FVector PivotRLocation = (Pivot - Target->GetComponentLocation());
 
 	// Calculate the Delta Location
 	const FVector DeltaLocation = PivotRLocation - PivotRLocation.RotateAngleAxis(DeltaRotation.Size(), FVector(-DeltaRotation.X, -DeltaRotation.Y, DeltaRotation.Z).GetSafeNormal());
