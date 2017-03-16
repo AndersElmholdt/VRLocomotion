@@ -16,3 +16,10 @@ void UTransformationFunctions::AddWorldRotationAroundPivot(USceneComponent* cons
 	const FTransform DeltaTransform = FTransform(FRotator(DeltaRotation.Y, DeltaRotation.Z, DeltaRotation.X), DeltaLocation, FVector::ZeroVector);
 	Target->AddWorldTransform(DeltaTransform, Sweep, (Sweep ? &SweepHitResult : nullptr), static_cast<ETeleportType>(Teleport));
 }
+
+
+float ApplyThreshold(const float Input, const float Threshold)
+{
+	const float Difference = ((Input < 0) ? -1 : 1) * Input - Threshold;
+	return (Difference > 0) ? Difference : 0;
+}
