@@ -103,7 +103,7 @@ void ULocSaver::WriteToFile() const
 		if (PlatformFile.CreateDirectoryTree(*Directory))
 		{
 			// Write ther file to specified name if we are allowed to overwrite, or the file does not already exist
-			if (AllowOverwriting || !PlatformFile.FileExists(*AbsoluteFilePath))
+			if (AllowOverwriting)
 			{
 				FFileHelper::SaveStringToFile(SaveData, *AbsoluteFilePath);
 			}
@@ -115,7 +115,7 @@ void ULocSaver::WriteToFile() const
 				const int MaxFileIndex = 100;
 
 				// Check for non existing file names with increments up to specified max
-				int i = 0;
+				int i = -1;
 				do
 				{
 					i++;
