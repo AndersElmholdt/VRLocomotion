@@ -17,9 +17,9 @@ void UTransformationFunctions::AddWorldRotationAroundPivot(USceneComponent* cons
 	Target->AddWorldTransform(DeltaTransform, Sweep, (Sweep ? &SweepHitResult : nullptr), static_cast<ETeleportType>(Teleport));
 }
 
-
-float ApplyThreshold(const float Input, const float Threshold)
+float UTransformationFunctions::ApplyThreshold(const float Input, const float Threshold)
 {
-	const float Difference = ((Input < 0) ? -1 : 1) * Input - Threshold;
-	return (Difference > 0) ? Difference : 0;
+	const float UpperBounds = 1.0f - Threshold;
+	const float ThresholdedValue = FMath::Clamp((1.0f / UpperBounds) * FMath::Abs(Input) - Threshold, 0.0f, 1.0f);
+	return ThresholdedValue * FMath::Sign(Input);
 }

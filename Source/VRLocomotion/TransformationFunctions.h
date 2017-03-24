@@ -28,7 +28,11 @@ class VRLOCOMOTION_API UTransformationFunctions : public UBlueprintFunctionLibra
 	UFUNCTION(BlueprintCallable, Category = "Utilities|Transformation", meta = (DisplayName = "AddWorldRotationAroundPivot", AdvancedDisplay = "Sweep,SweepHitResult,Teleport"))
 	static void AddWorldRotationAroundPivot(USceneComponent* const Target, const FVector Pivot, const FVector DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport);
 	
-
-	UFUNCTION(BlueprintCallable, Category = "Math|Float", meta = (DisplayName = "Apply Threshold"))
+	/**
+	 * Applies a threshold to the incoming number.
+	 * @param Input			The input number that should have the threshold applied to it.
+	 * @param Threshold		The threshold that should be applied.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Math|Float", meta = (DisplayName = "Apply Threshold"))
 	static float ApplyThreshold(const float Input, const float Threshold);
 };
