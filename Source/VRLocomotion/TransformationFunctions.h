@@ -35,4 +35,10 @@ class VRLOCOMOTION_API UTransformationFunctions : public UBlueprintFunctionLibra
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Math|Float", meta = (DisplayName = "Apply Threshold"))
 	static float ApplyThreshold(const float Input, const float Threshold);
+
+	UFUNCTION(BlueprintCallable, Category = "Utilities|Transformation", meta = (DisplayName = "Hello", AdvancedDisplay = "bSweep,SweepHitResult,bTeleport"))
+	static void AddLocalRotationQuat(USceneComponent* Target, const FQuat& DeltaRotation, bool Sweep, FHitResult& SweepHitResult, const bool Teleport);
+
+	UFUNCTION(BlueprintCallable, Category = "Utilities|Transformation", meta = (DisplayName = "Hallo", AdvancedDisplay = "bSweep,SweepHitResult,bTeleport"))
+	static void AddLocalRotationQuats(USceneComponent* Target, const FRotator& DeltaRotation, bool Sweep, FHitResult& SweepHitResult, const bool Teleport);
 };

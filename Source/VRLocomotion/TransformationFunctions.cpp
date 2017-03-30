@@ -23,3 +23,11 @@ float UTransformationFunctions::ApplyThreshold(const float Input, const float Th
 	const float ThresholdedValue = FMath::Clamp((1.0f / UpperBounds) * FMath::Abs(Input) - Threshold, 0.0f, 1.0f);
 	return ThresholdedValue * FMath::Sign(Input);
 }
+
+void UTransformationFunctions::AddLocalRotationQuat(USceneComponent* Target, const FQuat& DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport){
+	Target->AddLocalRotation(DeltaRotation, Sweep, (Sweep ? &SweepHitResult : nullptr), static_cast<ETeleportType>(Teleport));
+}
+
+void UTransformationFunctions::AddLocalRotationQuats(USceneComponent* Target, const FRotator& DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport) {
+	AddLocalRotationQuat(Target, DeltaRotation.Quaternion(), Sweep, SweepHitResult, Teleport);
+}
