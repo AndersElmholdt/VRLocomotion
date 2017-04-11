@@ -2,6 +2,7 @@
 
 #include "VRLocomotion.h"
 #include "PeakDetection.h"
+#include "PeakReceiver.h"
 
 
 // Sets default values for this component's properties
@@ -99,11 +100,13 @@ void UPeakDetection::DetectPeak(FVector Samples)
 		{
 			// Minimum found
 			MinZ.Add(FVector(Position, Samples.Z, GetWorld()->GetTimeSeconds()));
+			OnPeakZ.Broadcast();
 		}
 		else if (PreviousDerivative.Z <= 0 && FirstDerivative.Z > 0 && FMath::Abs(SecondDerivative.Z) > Delta)
 		{
 			// Maximum found
 			MaxZ.Add(FVector(Position, Samples.Z, GetWorld()->GetTimeSeconds()));
+			//OnPeakZ.Broadcast();
 		}
 
 		PreviousSamples = Samples;

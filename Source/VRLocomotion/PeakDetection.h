@@ -5,6 +5,7 @@
 #include "Components/SceneComponent.h"
 #include "PeakDetection.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FComponentCustomStartSignature);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class VRLOCOMOTION_API UPeakDetection : public USceneComponent
@@ -62,6 +63,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "PeakDetection")
 	float GetDistanceBetweenPeaksZ();
+
+	UPROPERTY(BlueprintAssignable, Category = "Custom")
+	FComponentCustomStartSignature OnPeakZ;
 
 protected:
 	// Called when the game starts
