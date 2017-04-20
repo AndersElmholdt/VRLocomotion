@@ -114,6 +114,11 @@ void UPeakDetection::DetectPeak(FVector Samples)
 	}
 }
 
+FVector UPeakDetection::GetDerivative()
+{
+	return PreviousDerivative;
+}
+
 FVector UPeakDetection::GetMaxX()
 {
 	return MaxX.Last();

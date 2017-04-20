@@ -64,6 +64,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "PeakDetection")
 	float GetDistanceBetweenPeaksZ();
 
+	UFUNCTION(BlueprintPure, Category = "PeakDetection")
+	FVector GetDerivative();
+
 	UPROPERTY(BlueprintAssignable, Category = "Custom")
 	FComponentCustomStartSignature OnPeakZ;
 
