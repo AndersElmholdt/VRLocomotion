@@ -67,8 +67,17 @@ public:
 	UFUNCTION(BlueprintPure, Category = "PeakDetection")
 	FVector GetDerivative();
 
+	UFUNCTION(BlueprintPure, Category = "PeakDetection")
+	float GetXYDistanceBetweenPeaksZ();
+
 	UPROPERTY(BlueprintAssignable, Category = "Custom")
 	FComponentCustomStartSignature OnPeakZ;
+
+	UPROPERTY(BlueprintAssignable, Category = "Custom")
+	FComponentCustomStartSignature OnPeakX;
+
+	UPROPERTY(BlueprintAssignable, Category = "Custom")
+	FComponentCustomStartSignature OnPeakY;
 
 protected:
 	// Called when the game starts
@@ -81,6 +90,8 @@ private:
 	FVector PreviousDerivative;
 	FVector PreviousSamples;
 	FVector CurrentMarker;
+	FVector LastPosition;
+	float LastDist;
 
 	int Position;
 

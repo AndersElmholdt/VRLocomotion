@@ -15,6 +15,7 @@ UPeakDetection::UPeakDetection()
 	Delta = 1.0f;
 	Alpha = 0.1f;
 	ChecksPerSecond = 20.0f;
+	LastPosition = FVector::ZeroVector;
 }
 
 // Called when the game starts
@@ -52,6 +53,11 @@ void UPeakDetection::Update()
 	if (RelativeComponent)
 	{
 		Samples -= RelativeComponent->GetComponentLocation();
+
+		// Counterrotate by parents rotation
+		//Samples.RotateAngleAxis(-RelativeComponent->GetComponentRotation().Yaw, FVector::UpVector);
+		Samples.RotateAngleAxis(GetComponentRotation().Yaw, FVector::UpVector);
+		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, FString::SanitizeFloat(GetComponentRotation().Yaw));
 	}
 	
 	DetectPeak(Samples);
@@ -76,6 +82,7 @@ void UPeakDetection::DetectPeak(FVector Samples)
 		{
 			// Minimum found
 			MinX.Add(FVector(Position, Samples.X, GetWorld()->GetTimeSeconds()));
+			OnPeakX.Broadcast();
 		}
 		else if (PreviousDerivative.X <= 0 && FirstDerivative.X > 0 && FMath::Abs(SecondDerivative.X) > Delta)
 		{
@@ -88,6 +95,7 @@ void UPeakDetection::DetectPeak(FVector Samples)
 		{
 			// Minimum found
 			MinY.Add(FVector(Position, Samples.Y, GetWorld()->GetTimeSeconds()));
+			OnPeakY.Broadcast();
 		}
 		else if (PreviousDerivative.Y <= 0 && FirstDerivative.Y > 0 && FMath::Abs(SecondDerivative.Y) > Delta)
 		{
@@ -99,6 +107,8 @@ void UPeakDetection::DetectPeak(FVector Samples)
 		if (PreviousDerivative.Z >= 0 && FirstDerivative.Z < 0 && FMath::Abs(SecondDerivative.Z) > Delta)
 		{
 			// Minimum found
+			LastDist = FVector::Dist(FVector(Samples.X, Samples.Y, 0), FVector(LastPosition.X, LastPosition.Y, 0));
+			LastPosition = Samples;
 			MinZ.Add(FVector(Position, Samples.Z, GetWorld()->GetTimeSeconds()));
 			OnPeakZ.Broadcast();
 		}
@@ -183,4 +193,9 @@ float UPeakDetection::GetDistanceBetweenPeaksZ()
 {
 	float DistanceZ = FMath::Abs(MaxZ.Last().Y - MinZ.Last().Y);
 	return DistanceZ;
+}
+
+float UPeakDetection::GetXYDistanceBetweenPeaksZ()
+{
+	return LastDist;
 }
