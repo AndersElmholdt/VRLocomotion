@@ -16,3 +16,18 @@ void UTransformationFunctions::AddWorldRotationAroundPivot(USceneComponent* cons
 	const FTransform DeltaTransform = FTransform(FRotator(DeltaRotation.Y, DeltaRotation.Z, DeltaRotation.X), DeltaLocation, FVector::ZeroVector);
 	Target->AddWorldTransform(DeltaTransform, Sweep, (Sweep ? &SweepHitResult : nullptr), static_cast<ETeleportType>(Teleport));
 }
+
+float UTransformationFunctions::ApplyThreshold(const float Input, const float Threshold)
+{
+	const float UpperBounds = 1.0f - Threshold;
+	const float ThresholdedValue = FMath::Clamp((1.0f / UpperBounds) * FMath::Abs(Input) - Threshold, 0.0f, 1.0f);
+	return ThresholdedValue * FMath::Sign(Input);
+}
+
+void UTransformationFunctions::AddLocalRotationQuat(USceneComponent* Target, const FQuat& DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport){
+	Target->AddLocalRotation(DeltaRotation, Sweep, (Sweep ? &SweepHitResult : nullptr), static_cast<ETeleportType>(Teleport));
+}
+
+void UTransformationFunctions::AddLocalRotationQuats(USceneComponent* Target, const FRotator& DeltaRotation, const bool Sweep, FHitResult& SweepHitResult, const bool Teleport) {
+	AddLocalRotationQuat(Target, DeltaRotation.Quaternion(), Sweep, SweepHitResult, Teleport);
+}
