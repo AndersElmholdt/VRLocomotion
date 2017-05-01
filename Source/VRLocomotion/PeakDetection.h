@@ -26,6 +26,9 @@ public:
 	float ChecksPerSecond;
 
 	UPROPERTY(EditDefaultsOnly)
+	float MinFrequency;
+
+	UPROPERTY(EditDefaultsOnly)
 	FString RelativeComponentName;
 
 	UFUNCTION(BlueprintPure, Category="PeakDetection")

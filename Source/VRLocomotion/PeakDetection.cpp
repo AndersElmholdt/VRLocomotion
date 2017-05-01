@@ -15,6 +15,7 @@ UPeakDetection::UPeakDetection()
 	Delta = 1.0f;
 	Alpha = 0.1f;
 	ChecksPerSecond = 20.0f;
+	MinFrequency = 3.5f;
 	LastPosition = FVector::ZeroVector;
 }
 
@@ -104,7 +105,7 @@ void UPeakDetection::DetectPeak(FVector Samples)
 		}
 
 		// Z-COMPONENT PEAK DETECTION:
-		if (PreviousDerivative.Z >= 0 && FirstDerivative.Z < 0 && FMath::Abs(SecondDerivative.Z) > Delta)
+		if (PreviousDerivative.Z >= 0 && FirstDerivative.Z < 0 && FMath::Abs(SecondDerivative.Z) > Delta && (GetWorld()->GetTimeSeconds() - MinZ.Last().Z) > 1 / MinFrequency)
 		{
 			// Minimum found
 			LastDist = FVector::Dist(FVector(Samples.X, Samples.Y, 0), FVector(LastPosition.X, LastPosition.Y, 0));
@@ -112,7 +113,7 @@ void UPeakDetection::DetectPeak(FVector Samples)
 			MinZ.Add(FVector(Position, Samples.Z, GetWorld()->GetTimeSeconds()));
 			OnPeakZ.Broadcast();
 		}
-		else if (PreviousDerivative.Z <= 0 && FirstDerivative.Z > 0 && FMath::Abs(SecondDerivative.Z) > Delta)
+		else if (PreviousDerivative.Z <= 0 && FirstDerivative.Z > 0 && FMath::Abs(SecondDerivative.Z) > Delta && (GetWorld()->GetTimeSeconds() - MaxZ.Last().Z) > 1 / MinFrequency)
 		{
 			// Maximum found
 			MaxZ.Add(FVector(Position, Samples.Z, GetWorld()->GetTimeSeconds()));
